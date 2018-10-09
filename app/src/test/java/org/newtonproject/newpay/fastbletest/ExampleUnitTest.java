@@ -1,4 +1,4 @@
-package com.example.newton.fastbletest;
+package org.newtonproject.newpay.fastbletest;
 
 import org.junit.Test;
 

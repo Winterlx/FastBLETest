@@ -1,4 +1,4 @@
-package com.example.newton.fastbletest;
+package org.newtonproject.newpay.fastbletest;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

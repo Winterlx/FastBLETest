@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,23 +12,59 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/scanButton"
-            android:layout_width="wrap_content"
+            android:id="@+id/connectButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Connext" />
+            android:text="@string/connect"
+            android:textAllCaps="false" />
 
         <Button
-            android:id="@+id/writeButton"
-            android:layout_width="wrap_content"
+            android:id="@+id/disconnectButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="write" />
+            android:text="@string/disconnect"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/clearButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/clear"
+            android:textAllCaps="false" />
 
         <ProgressBar
             android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:visibility="invisible" />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/inputText"
+            android:hint="@string/type_you_data_here"
+            android:layout_width="0dp"
+            android:layout_weight="5"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/writeButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/write"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+
     <ScrollView
         android:id="@+id/receiveScrollView"
         android:layout_width="match_parent"
