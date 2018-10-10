@@ -1,6 +1,7 @@
 package org.newtonproject.newpay.fastbletest;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
@@ -33,24 +34,43 @@ import com.clj.fastble.data.BleDevice;
 import com.clj.fastble.exception.BleException;
 import com.clj.fastble.scan.BleScanRuleConfig;
 
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressLint("Registered")
+@EActivity
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_PERMISSION_LOCATION = 1;
     public static final String DEVICE_NAME = "NewKey";
     private static final String UUID_SERVICE = "0000ffe0-0000-1000-8000-00805f9b34fb";
     private static final String UUID_CHARACTERISTIC = "0000ffe1-0000-1000-8000-00805f9b34fb";
-    private TextView textView;
-    private ScrollView receiveScrollView;
-    private Button connectButton;
-    private Button writeButton;
-    private Button disconnectButton;
-    private ProgressBar progressBar;
-    private EditText inputText;
-
     private BleDevice bleDevice;
+
+    @ViewById
+    TextView textView;
+
+    @ViewById
+    ScrollView receiveScrollView;
+
+    @ViewById
+    Button connectButton;
+
+    @ViewById
+    Button writeButton;
+
+    @ViewById
+    Button disconnectButton;
+
+    @ViewById
+    ProgressBar progressBar;
+
+    @ViewById
+    EditText inputText;
 
     public void setBleDevice(BleDevice bleDevice) {
         this.bleDevice = bleDevice;
@@ -64,34 +84,42 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textView = findViewById(R.id.textView);
-        receiveScrollView = findViewById(R.id.receiveScrollView);
-        connectButton = findViewById(R.id.connectButton);
-        progressBar = findViewById(R.id.progressBar);
-        writeButton = findViewById(R.id.writeButton);
+
         writeButton.setEnabled(false);
-        disconnectButton = findViewById(R.id.disconnectButton);
         disconnectButton.setEnabled(false);
-        inputText = findViewById(R.id.inputText);
-        Button clearButton = findViewById(R.id.clearButton);
+
         BleManager.getInstance().init(getApplication());
         BleManager.getInstance()
                 .enableLog(true)
                 .setReConnectCount(1, 5000)
                 .setConnectOverTime(20000)
                 .setOperateTimeout(5000);
-        connectButton.setOnClickListener(view -> checkPermissions());
-        writeButton.setOnClickListener((View view) -> {
-            byte[] data = inputText.getText().toString().getBytes();
-            showLog("data length " + data.length);
-            writeData(data);
-        });
-        clearButton.setOnClickListener(view -> textView.setText(""));
-        disconnectButton.setOnClickListener(view -> BleManager.getInstance().disconnect(getBleDevice()));
+    }
+
+    @Click
+    void connectButton(){
+        checkPermissions();
+    }
+
+    @Click
+    void writeButton(){
+        byte[] data = inputText.getText().toString().getBytes();
+        showLog("data length " + data.length);
+        writeData(data);
+    }
+
+    @Click
+    void clearButton(){
+        textView.setText("");
+    }
+
+    @Click
+    void disconnectButton(){
+        BleManager.getInstance().disconnect(getBleDevice());
     }
 
     private void writeData(byte[] data) {
-        BleManager.getInstance().write(getBleDevice(), UUID_SERVICE, UUID_CHARACTERISTIC, data,false, bleWriteCallback);
+        BleManager.getInstance().write(getBleDevice(), UUID_SERVICE, UUID_CHARACTERISTIC, data, false, bleWriteCallback);
         //false表示不分包发送
     }
 

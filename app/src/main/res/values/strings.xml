@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FastBLETest</string>
+    <string name="app_name">Android_BLE_Template</string>
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>
     <string name="write">Write</string>
