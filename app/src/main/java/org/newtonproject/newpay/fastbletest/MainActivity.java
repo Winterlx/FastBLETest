@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         connectButton.setOnClickListener(view -> checkPermissions());
         writeButton.setOnClickListener((View view) -> {
             byte[] data = inputText.getText().toString().getBytes();
-//            showLog("char length "+inputText.getText().toString().toCharArray().length);
             showLog("data length " + data.length);
             writeData(data);
         });
