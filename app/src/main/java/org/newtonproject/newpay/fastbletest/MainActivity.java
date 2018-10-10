@@ -15,7 +15,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,7 +38,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_PERMISSION_LOCATION = 1;
-    private static final String TAG = "test";
     public static final String DEVICE_NAME = "NewKey";
     private static final String UUID_SERVICE = "0000ffe0-0000-1000-8000-00805f9b34fb";
     private static final String UUID_CHARACTERISTIC = "0000ffe1-0000-1000-8000-00805f9b34fb";
@@ -85,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         writeButton.setOnClickListener((View view) -> {
             byte[] data = inputText.getText().toString().getBytes();
 //            showLog("char length "+inputText.getText().toString().toCharArray().length);
-            showLog("data length "+data.length);
+            showLog("data length " + data.length);
             writeDate(data);
         });
         clearButton.setOnClickListener(view -> textView.setText(""));
@@ -177,18 +175,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onScanning(BleDevice bleDevice) {
                 //符合BleScanRuleConfig的设备会出现在这里
-                Log.e(TAG, "onScanning : " + bleDevice.getName());
+                showLog("onScanning : " + bleDevice.getName());
                 setBleDevice(bleDevice);
+                progressBar.setVisibility(View.INVISIBLE);
                 connect(bleDevice);
             }
 
             @Override
             public void onScanFinished(List<BleDevice> scanResultList) {
                 showLog("scan finished");
-                connectButton.setEnabled(false);
                 for (BleDevice bd : scanResultList) {
                     showLog(bd.getName());
                 }
+                progressBar.setVisibility(View.INVISIBLE);
+                connectButton.setEnabled(true);
             }
         });
     }
@@ -198,22 +198,29 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStartConnect() {
                 BleManager.getInstance().cancelScan();
+                Runnable runnable = () -> {
+                    connectButton.setEnabled(false);
+                    progressBar.setVisibility(View.VISIBLE);
+                };
+                Handler handler = new Handler();
+                handler.postDelayed(runnable, 5);
                 showLog("start connect");
-                Log.e(TAG, "start connect");
             }
 
             @Override
             public void onConnectFail(BleDevice bleDevice, BleException exception) {
                 showLog("connect fail");
+                connectButton.setEnabled(true);
                 writeButton.setEnabled(false);
                 disconnectButton.setEnabled(false);
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
-                progressBar.setVisibility(View.INVISIBLE);
                 writeButton.setEnabled(true);
                 disconnectButton.setEnabled(true);
+                connectButton.setEnabled(false);
                 showLog("connect succeed , status : " + status);
                 Runnable runnable = () -> BleManager.getInstance().notify(
                         bleDevice,
@@ -223,16 +230,18 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onNotifySuccess() {
                                 showLog("notify succeed");
+                                progressBar.setVisibility(View.INVISIBLE);
                             }
 
                             @Override
                             public void onNotifyFailure(BleException exception) {
                                 showLog("notify fail");
+                                progressBar.setVisibility(View.INVISIBLE);
                             }
 
                             @Override
                             public void onCharacteristicChanged(byte[] data) {
-                                    showLog(new String(data));
+                                showLog(new String(data));
                             }
                         });
                 Handler handler = new Handler();
