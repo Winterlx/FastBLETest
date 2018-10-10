@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.newtonproject.newpay.fastbletest">
+    package="org.newtonproject.newpay.android_ble_template">
 
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme"
         android:fullBackupContent="@xml/backup_descriptor"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="org.newtonproject.newpay.fastbletest.MainActivity_">
+        <activity android:name="org.newtonproject.newpay.android_ble_template.MainActivity_">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

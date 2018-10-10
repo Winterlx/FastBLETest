@@ -1,4 +1,4 @@
-package org.newtonproject.newpay.fastbletest;
+package org.newtonproject.newpay.android_ble_template;
 
 import org.junit.Test;
 
