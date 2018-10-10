@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.clj.fastble.BleManager;
 import com.clj.fastble.callback.BleGattCallback;
+import com.clj.fastble.callback.BleMtuChangedCallback;
 import com.clj.fastble.callback.BleNotifyCallback;
 import com.clj.fastble.callback.BleScanCallback;
 import com.clj.fastble.callback.BleWriteCallback;
@@ -84,15 +85,15 @@ public class MainActivity extends AppCompatActivity {
             byte[] data = inputText.getText().toString().getBytes();
 //            showLog("char length "+inputText.getText().toString().toCharArray().length);
             showLog("data length " + data.length);
-            writeDate(data);
+            writeData(data);
         });
         clearButton.setOnClickListener(view -> textView.setText(""));
         disconnectButton.setOnClickListener(view -> BleManager.getInstance().disconnect(getBleDevice()));
     }
 
-    private void writeDate(byte[] data) {
-        BleManager.getInstance().write(getBleDevice(), UUID_SERVICE, UUID_CHARACTERISTIC, data, bleWriteCallback);
-        // TODO: 2018/10/9 恢复功能放到onCharacteristicChanged中
+    private void writeData(byte[] data) {
+        BleManager.getInstance().write(getBleDevice(), UUID_SERVICE, UUID_CHARACTERISTIC, data,false, bleWriteCallback);
+        //false表示不分包发送
     }
 
     private void checkPermissions() {
@@ -222,6 +223,17 @@ public class MainActivity extends AppCompatActivity {
                 disconnectButton.setEnabled(true);
                 connectButton.setEnabled(false);
                 showLog("connect succeed , status : " + status);
+                BleManager.getInstance().setMtu(bleDevice, 99, new BleMtuChangedCallback() {
+                    @Override
+                    public void onSetMTUFailure(BleException exception) {
+                        showLog("set MTU failed");
+                    }
+
+                    @Override
+                    public void onMtuChanged(int mtu) {
+                        showLog("set MTU succeed , MTU : " + mtu);
+                    }
+                });
                 Runnable runnable = () -> BleManager.getInstance().notify(
                         bleDevice,
                         UUID_SERVICE,
@@ -262,7 +274,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onWriteSuccess(int current, int total, byte[] justWrite) {
             showLog("Write success");
-            // TODO: 2018/10/9 获取
         }
 
         @Override
